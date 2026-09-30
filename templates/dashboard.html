@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>EasyAppointment</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f6f8;
+            margin: 0;
+            padding: 0;
+        }
+
+        header {
+            background: #4a69bd;
+            color: white;
+            padding: 25px;
+            text-align: center;
+        }
+
+        .container {
+            width: 90%;
+            margin: 30px auto;
+        }
+
+        .top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .add-button {
+            background: #38ada9;
+            color: white;
+            padding: 12px 18px;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+
+        .add-button:hover {
+            background: #218c88;
+        }
+
+        .table-container {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th {
+            background: #4a69bd;
+            color: white;
+            padding: 12px;
+        }
+
+        td {
+            padding: 12px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        tr:hover {
+            background: #f5f5f5;
+        }
+
+        .edit {
+            background: #f6b93b;
+            color: white;
+            padding: 7px 12px;
+            text-decoration: none;
+            border-radius: 4px;
+        }
+
+        .delete {
+            background: #e55039;
+            color: white;
+            padding: 7px 12px;
+            text-decoration: none;
+            border-radius: 4px;
+        }
+
+        .empty {
+            text-align: center;
+            padding: 30px;
+            color: #777;
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+    <h1>EasyAppointment</h1>
+    <p>Appointment Management System</p>
+</header>
+
+<div class="container">
+
+    <div class="top">
+        <h2>Appointments</h2>
+
+        <a href="{% url 'appointment_create' %}" class="add-button">
+            + Add Appointment
+        </a>
+    </div>
+
+    <div class="table-container">
+
+        <table>
+
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Patient Name</th>
+                    <th>Contact Number</th>
+                    <th>Date</th>
+                    <th>Time</th>
+                    <th>Purpose</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+
+            <tbody>
+
+                {% for appointment in appointments %}
+
+                <tr>
+                    <td>{{ appointment.id }}</td>
+
+                    <td>
+                        {{ appointment.patient_name }}
+                    </td>
+
+                    <td>
+                        {{ appointment.contact_number }}
+                    </td>
+
+                    <td>
+                        {{ appointment.appointment_date }}
+                    </td>
+
+                    <td>
+                        {{ appointment.appointment_time }}
+                    </td>
+
+                    <td>
+                        {{ appointment.purpose }}
+                    </td>
+
+                    <td>
+                        {{ appointment.status }}
+                    </td>
+
+                    <td>
+
+                        <a
+                            href="{% url 'appointment_update' appointment.id %}"
+                            class="edit">
+                            Edit
+                        </a>
+
+                        <a
+                            href="{% url 'appointment_delete' appointment.id %}"
+                            class="delete">
+                            Delete
+                        </a>
+
+                    </td>
+                </tr>
+
+                {% empty %}
+
+                <tr>
+                    <td colspan="8" class="empty">
+                        No appointments found.
+                    </td>
+                </tr>
+
+                {% endfor %}
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+</div>
+
+</body>
+</html>
