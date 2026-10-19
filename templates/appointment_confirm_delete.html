@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block title %}Delete appointment | EasyAppointment{% endblock %}
+{% block breadcrumb %}Delete appointment{% endblock %}
+{% block content %}
+<section class="form-page">
+    <a class="back-link" href="{% url 'appointment_list' %}#appointments">← Back to appointments</a>
+    <div class="form-card delete-card">
+        <div class="delete-icon" aria-hidden="true">!</div>
+        <p class="eyebrow">CONFIRM ACTION</p>
+        <h1>Delete this appointment?</h1>
+        <p class="form-intro">This will permanently remove the appointment for <strong>{{ appointment.patient_name }}</strong> (ID #{{ appointment.pk }}).</p>
+        <form method="post" data-confirm="Delete appointment #{{ appointment.pk }}? This action cannot be undone.">
+            {% csrf_token %}
+            <div class="form-actions">
+                <a class="button button-secondary" href="{% url 'appointment_list' %}#appointments">Keep appointment</a>
+                <button class="button button-danger" type="submit">Delete appointment</button>
+            </div>
+        </form>
+    </div>
+</section>
+{% endblock %}

@@ -1,200 +1,99 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <title>EasyAppointment</title>
-
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background: #f4f6f8;
-            margin: 0;
-            padding: 0;
-        }
-
-        header {
-            background: #4a69bd;
-            color: white;
-            padding: 25px;
-            text-align: center;
-        }
-
-        .container {
-            width: 90%;
-            margin: 30px auto;
-        }
-
-        .top {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-        }
-
-        .add-button {
-            background: #38ada9;
-            color: white;
-            padding: 12px 18px;
-            text-decoration: none;
-            border-radius: 5px;
-        }
-
-        .add-button:hover {
-            background: #218c88;
-        }
-
-        .table-container {
-            background: white;
-            padding: 20px;
-            border-radius: 10px;
-            overflow-x: auto;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-
-        th {
-            background: #4a69bd;
-            color: white;
-            padding: 12px;
-        }
-
-        td {
-            padding: 12px;
-            border-bottom: 1px solid #ddd;
-        }
-
-        tr:hover {
-            background: #f5f5f5;
-        }
-
-        .edit {
-            background: #f6b93b;
-            color: white;
-            padding: 7px 12px;
-            text-decoration: none;
-            border-radius: 4px;
-        }
-
-        .delete {
-            background: #e55039;
-            color: white;
-            padding: 7px 12px;
-            text-decoration: none;
-            border-radius: 4px;
-        }
-
-        .empty {
-            text-align: center;
-            padding: 30px;
-            color: #777;
-        }
-    </style>
-</head>
-
-<body>
-
-<header>
-    <h1>EasyAppointment</h1>
-    <p>Appointment Management System</p>
-</header>
-
-<div class="container">
-
-    <div class="top">
-        <h2>Appointments</h2>
-
-        <a href="{% url 'appointment_create' %}" class="add-button">
-            + Add Appointment
-        </a>
+{% extends "base.html" %}
+{% block title %}Dashboard | EasyAppointment{% endblock %}
+{% block breadcrumb %}Dashboard{% endblock %}
+{% block content %}
+<section aria-labelledby="dashboard-title">
+    <div class="page-heading">
+        <div>
+            <p class="eyebrow">YOUR OVERVIEW</p>
+            <h1 id="dashboard-title">Good to see you, {{ user.first_name|default:user.username }}!</h1>
+            <p>Here's what's happening with your appointments.</p>
+        </div>
+        <a class="button button-primary" href="{% url 'appointment_create' %}"><span aria-hidden="true">＋</span> Add appointment</a>
     </div>
 
-    <div class="table-container">
-
-        <table>
-
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Patient Name</th>
-                    <th>Contact Number</th>
-                    <th>Date</th>
-                    <th>Time</th>
-                    <th>Purpose</th>
-                    <th>Status</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-
-            <tbody>
-
-                {% for appointment in appointments %}
-
-                <tr>
-                    <td>{{ appointment.id }}</td>
-
-                    <td>
-                        {{ appointment.patient_name }}
-                    </td>
-
-                    <td>
-                        {{ appointment.contact_number }}
-                    </td>
-
-                    <td>
-                        {{ appointment.appointment_date }}
-                    </td>
-
-                    <td>
-                        {{ appointment.appointment_time }}
-                    </td>
-
-                    <td>
-                        {{ appointment.purpose }}
-                    </td>
-
-                    <td>
-                        {{ appointment.status }}
-                    </td>
-
-                    <td>
-
-                        <a
-                            href="{% url 'appointment_update' appointment.id %}"
-                            class="edit">
-                            Edit
-                        </a>
-
-                        <a
-                            href="{% url 'appointment_delete' appointment.id %}"
-                            class="delete">
-                            Delete
-                        </a>
-
-                    </td>
-                </tr>
-
-                {% empty %}
-
-                <tr>
-                    <td colspan="8" class="empty">
-                        No appointments found.
-                    </td>
-                </tr>
-
-                {% endfor %}
-
-            </tbody>
-
-        </table>
-
+    <div class="stats-grid" aria-label="Appointment summary">
+        <article class="stat-card stat-total">
+            <div class="stat-top"><span class="stat-label">Total appointments</span><span class="stat-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3.5" y="5" width="17" height="15.5" rx="3"/><path d="M7.5 3.5v3M16.5 3.5v3M4 9.5h16"/></svg></span></div>
+            <strong class="stat-value">{{ total|default:0 }}</strong>
+        </article>
+        <article class="stat-card stat-pending">
+            <div class="stat-top"><span class="stat-label">Pending</span><span class="stat-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path d="M12 7v5l3 2"/></svg></span></div>
+            <strong class="stat-value">{{ pending|default:0 }}</strong>
+        </article>
+        <article class="stat-card stat-approved">
+            <div class="stat-top"><span class="stat-label">Approved</span><span class="stat-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path d="m8 12 2.5 2.5L16 9"/></svg></span></div>
+            <strong class="stat-value">{{ approved|default:0 }}</strong>
+        </article>
+        <article class="stat-card stat-cancelled">
+            <div class="stat-top"><span class="stat-label">Cancelled</span><span class="stat-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path d="m9 9 6 6m0-6-6 6"/></svg></span></div>
+            <strong class="stat-value">{{ cancelled|default:0 }}</strong>
+        </article>
     </div>
 
-</div>
-
-</body>
-</html>
+    <section class="table-card" id="appointments" aria-labelledby="appointments-title">
+        <div class="table-heading">
+            <div>
+                <h2 id="appointments-title">Appointments</h2>
+                <p>View and manage your appointment schedule.</p>
+            </div>
+            <form method="get" action="{% url 'appointment_list' %}" class="filter-form" role="search">
+                <label class="sr-only" for="appointment-search">Search appointments</label>
+                <input class="search-field" id="appointment-search" type="search" name="q" placeholder="Search appointments..." value="{{ search_query }}">
+                <label class="sr-only" for="status-filter">Filter by status</label>
+                <select class="filter-select" id="status-filter" name="status">
+                    <option value="">All statuses</option>
+                    {% for value, label in status_choices %}
+                    <option value="{{ value }}" {% if selected_status == value %}selected{% endif %}>{{ label }}</option>
+                    {% endfor %}
+                </select>
+                <button class="filter-button" type="submit">Search</button>
+            </form>
+        </div>
+        <div class="table-wrap">
+            <table class="appointment-table">
+                <thead>
+                    <tr>
+                        <th scope="col">ID</th>
+                        <th scope="col">PATIENT</th>
+                        <th scope="col">CONTACT</th>
+                        <th scope="col">DATE</th>
+                        <th scope="col">TIME</th>
+                        <th scope="col">PURPOSE</th>
+                        <th scope="col">STATUS</th>
+                        <th scope="col">ACTIONS</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for appointment in appointments %}
+                    <tr>
+                        <td class="id-cell">#{{ appointment.pk }}</td>
+                        <td class="patient-cell"><span class="patient-avatar">{{ appointment.patient_name|first|upper }}</span>{{ appointment.patient_name }}</td>
+                        <td>{{ appointment.contact_number }}</td>
+                        <td><span class="date-main">{{ appointment.appointment_date|date:"M j, Y" }}</span></td>
+                        <td>{{ appointment.appointment_time|time:"g:i A" }}</td>
+                        <td>{{ appointment.purpose }}</td>
+                        <td><span class="status-badge status-{{ appointment.status|lower }}">{% if appointment.status == 'Confirmed' %}Approved{% else %}{{ appointment.get_status_display }}{% endif %}</span></td>
+                        <td>
+                            <div class="actions-cell">
+                                <a class="action-link" href="{% url 'appointment_update' id=appointment.pk %}" aria-label="Edit appointment #{{ appointment.pk }}">Edit</a>
+                                <a class="action-link danger" href="{% url 'appointment_delete' id=appointment.pk %}" aria-label="Delete appointment #{{ appointment.pk }}">Delete</a>
+                            </div>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td class="empty-state" colspan="8">
+                            <span class="empty-illustration" aria-hidden="true">✦</span>
+                            <h3>{% if search_query or selected_status %}No matching appointments{% else %}No appointments yet{% endif %}</h3>
+                            <p>{% if search_query or selected_status %}Try changing your search or status filter.{% else %}Your schedule is clear. Add an appointment to get started.{% endif %}</p>
+                            {% if not search_query and not selected_status %}<a class="button button-primary" href="{% url 'appointment_create' %}">Add your first appointment</a>{% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </section>
+</section>
+{% endblock %}
